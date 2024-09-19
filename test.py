@@ -4,12 +4,12 @@ from sys import exit
 pygame.init()
 clock = pygame.time.Clock()
 
-#Window/screen
+# Window/screen
 Win_Height = 720
 Win_Width = 551
 window = pygame.display.set_mode((Win_Width, Win_Height))
 
-#images
+# images
 rocket_image = [pygame.image.load("./assets/ spaceship straight final.png"),
                 ("./assets/ spaceship down angle.png"),
                 ("./assets/ spaceship staight final.png")]

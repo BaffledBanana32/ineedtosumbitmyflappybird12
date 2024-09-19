@@ -10,16 +10,14 @@ Win_Width = 551
 window = pygame.display.set_mode((Win_Width, Win_Height))
 
 #images
-rocket_image = [pygame.image.load("assets/ spaceship staight final.png"),
-                ("assets/ spaceship down angle.png"),
-                ("assets/ spaceship staight final.png")
-
-
-background_image =
-top_portal_image =
-bottom_portal_image =
-game_over_image =
-start_image =
+rocket_image = [pygame.image.load("./assets/ spaceship straight final.png"),
+                ("./assets/ spaceship down angle.png"),
+                ("./assets/ spaceship staight final.png")]
+background_image = pygame.image.load("./assets/final background.png")
+top_portal_image = pygame.image.load("./assets/top_portal.png")
+bottom_portal_image = pygame.image.load("./assets/bottom_portal.png")
+game_over_image = pygame.image.load("./assets/Game over.png")
+start_image = pygame.image.load("./assets/Start.png")
 
 def quit_game():
     for event in pygame.event.get():

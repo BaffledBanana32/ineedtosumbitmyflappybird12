@@ -12,13 +12,13 @@ Win_Width = 551
 window = pygame.display.set_mode((Win_Width, Win_Height))
 
 # images
-rocket_image = [pygame.image.load("assets/spaceship_straightfinal08.png"),
-                pygame.image.load("assets/spaceship_straightfinal07.png"),
-                pygame.image.load("assets/spaceship_straightfinal09.png")]
+rocket_image = [pygame.image.load("assets/rocket1.png"),
+                pygame.image.load("assets/rocket2.png"),
+                pygame.image.load("assets/rocket3.png")]
 background_image = pygame.image.load("assets/final_background.png")
 moving_background = pygame.image.load("assets/moving_back final.png")
-top_portal_image = pygame.image.load("assets/top_portalresized.png")
-bottom_portal_image = pygame.image.load("assets/bottom_portal.png")
+top_portal_image = pygame.image.load("assets/portal_resized1.png")
+bottom_portal_image = pygame.image.load("assets/portal_resized2.png")
 game_over_image = pygame.image.load("assets/Game over.png")
 start_image = pygame.image.load("assets/Start.png")
 
@@ -69,7 +69,7 @@ class Portal(pygame.sprite.Sprite):
     def update(self):
         #pipe go left
         self.rect.x -= Scroll_speed
-        if self.rect.y <= -Win_Width:
+        if self.rect.x <= -Win_Width:
             self.kill()
 
 
@@ -102,7 +102,7 @@ def main():
 
     #portals
     portal_timer = 0
-    portal = pygame.sprite.GroupSingle()
+    portal = pygame.sprite.Group()
 
 
     #moving image

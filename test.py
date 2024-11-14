@@ -1,9 +1,6 @@
 import pygame
 from sys import exit
-import random
-from pygame.examples.playmus import Window
-from pygame.examples.sprite_texture import sprite
-from pygame.sprite import spritecollide
+import random, time
 
 pygame.init()
 clock = pygame.time.Clock()
@@ -29,8 +26,7 @@ bullet_image = pygame.image.load("assets/bullet.png")
 
 
 # Games
-changable_varible = 0
-Scroll_speed = 2 + changable_varible
+Scroll_speed = 2
 rocket_start_pos = (100,250)
 score = 0
 Coin_score = 0
@@ -117,7 +113,7 @@ class Moving_ground(pygame.sprite.Sprite):
         if self.rect.x < -Win_Width:
             self.kill()
 
-
+#the coin
 class Coin(pygame.sprite.Sprite):
     def __init__(self, x, y,image):
         pygame.sprite.Sprite.__init__(self)
@@ -127,7 +123,7 @@ class Coin(pygame.sprite.Sprite):
         self.rect.y = y
         self.living = True
 
-
+    #moving towrads left side then killed after it passes the screen
     def update(self):
         if self.alive:
             self.rect.x -= Scroll_speed
@@ -145,22 +141,21 @@ def quit_game():
 def main():
     global score
     global Coin_score
-    global changable_varible
-
-    #rocket
+    global Scroll_speed
+    #rocket varibles
     rocket = pygame.sprite.GroupSingle()
     rocket.add(Rocket())
 
-    #portals
+    #portal varibles
     portal_timer = 0
     portal = pygame.sprite.Group()
 
-    #moving image
+    #moving varibles
     x_pos_ground, y_pos_ground = 0, 520
     ground = pygame.sprite.Group()
     ground.add(Moving_ground(x_pos_ground, y_pos_ground))
 
-    #coins
+    #coins varibles
     coin_timer = 0
     coin = pygame.sprite.Group()
 
@@ -169,7 +164,7 @@ def main():
     while run:
         quit_game()
 
-
+        #make the screen black
         window.fill((0,0,0))
 
         #users input
@@ -180,7 +175,7 @@ def main():
 
         if len(ground) <= 2:
             ground.add(Moving_ground(Win_Width, y_pos_ground))
-
+        #making the objects be able to add into the screen
         portal.draw(window)
         coin.draw(window)
         ground.draw(window)
@@ -195,14 +190,14 @@ def main():
 
 
 
-
+        #updating/displaying each object
         if rocket.sprite.alive:
             portal.update()
             ground.update()
             rocket.update(user_input)
             coin.update()
 
-
+        #respawn coin
         if coin_timer <= 0 and rocket.sprite.alive:
             coin_y = random.randint(200,400)
             coin_x = 620
@@ -210,18 +205,27 @@ def main():
             coin_timer = random.randint(180, 250)
         coin_timer -= 1
 
-
+        #detect coin
         coin_collision = pygame.sprite.spritecollide(rocket.sprites()[0], coin, False)
         if coin_collision:
             coin.remove(coin_collision[0])
             Coin_score += 1
 
+        #typo on remainder but adds speed towards the rocket making each level of the game harder
+        Remander = score - Coin_score
+        if Remander == 0:
+            Scroll_speed = 2
+        elif Remander > 0 and Remander < 5:
+            Scroll_speed = 3
+        elif Remander > 5 and Remander < 10:
+            Scroll_speed = 4
+        elif Remander > 10 and Remander < 15:
+            Scroll_speed = 5
+        elif Remander > 20:
+            Scroll_speed = 6
 
-        if Coin_score != score:
-            for Coin_score in score:
-                changable_varible += 1
 
-
+        #collision with the portals and ground making a game over screen pop up
         collision_portal = pygame.sprite.spritecollide(rocket.sprites()[0], portal, False)
         collision_ground = pygame.sprite.spritecollide(rocket.sprites()[0], ground, False)
         if collision_portal or collision_ground:
@@ -232,6 +236,7 @@ def main():
                 if user_input[pygame.K_r]:
                     score = 0
                     Coin_score = 0
+                    Scroll_speed = 2
                     break
 
 
@@ -239,31 +244,31 @@ def main():
         if portal_timer <= 0 and rocket.sprite.alive:
             x_top, x_bottom = 550, 550
             y_top = random.randint(-600, -480)
-            y_bottom = y_top + random.randint(100, 130) + bottom_portal_image.get_height()
+            y_bottom = y_top + random.randint(110, 130) + bottom_portal_image.get_height()
             portal.add(Portal(x_top, y_top, top_portal_image, 'top'))
             portal.add(Portal(x_bottom, y_bottom, bottom_portal_image, 'bottom'))
             portal_timer = random.randint(180, 250)
         portal_timer -= 1
 
-
+        #updating the framrate of the game
         clock.tick(60)
         pygame.display.update()
 
-
+#menu/start screen
 def menu ():
     global game_stop
 
     while game_stop:
-        quit_game()
+        quit_game() #pressing r above in the other code breaks the code and resets to the start
 
-        window.fill((0,0,0))
+        window.fill((0,0,0)) #adding the background images and what not
         window.blit(background_image,(0,0))
         window.blit(moving_background, (0,520))
         window.blit(rocket_image[0], (100,250))
         window.blit(start_image, (Win_Width // 2 - start_image.get_width() // 2,
                                   Win_Height // 2 - start_image.get_height() // 2))
 
-        user_input = pygame.key.get_pressed()
+        user_input = pygame.key.get_pressed() #start the game
         if user_input[pygame.K_SPACE]:
             main()
 

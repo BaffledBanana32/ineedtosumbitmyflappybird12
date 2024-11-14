@@ -29,7 +29,8 @@ bullet_image = pygame.image.load("assets/bullet.png")
 
 
 # Games
-Scroll_speed = 2
+changable_varible = 0
+Scroll_speed = 2 + changable_varible
 rocket_start_pos = (100,250)
 score = 0
 Coin_score = 0
@@ -134,23 +135,6 @@ class Coin(pygame.sprite.Sprite):
             self.kill()
 
 
-class Asteroid(pygame.sprite.Sprite):
-    def __init__(self, x, y, image):
-        pygame.sprite.Sprite.__init__(self)
-        self.image = image
-        self.rect = self.image.get_rect()
-        self.rect.x = x
-        self.rect.y = y
-
-
-    def update(self):
-        if self.alive:
-            self.rect.x -= Scroll_speed
-        if self.rect.x <= -Win_Width:
-            self.kill()
-
-
-
 def quit_game():
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -161,6 +145,7 @@ def quit_game():
 def main():
     global score
     global Coin_score
+    global changable_varible
 
     #rocket
     rocket = pygame.sprite.GroupSingle()
@@ -178,10 +163,6 @@ def main():
     #coins
     coin_timer = 0
     coin = pygame.sprite.Group()
-
-    #asteroid
-    asteroid_timer = 0
-    asteroid = pygame.sprite.Group()
 
 
     run = True 
@@ -220,8 +201,6 @@ def main():
             ground.update()
             rocket.update(user_input)
             coin.update()
-            asteroid.update()
-
 
 
         if coin_timer <= 0 and rocket.sprite.alive:
@@ -232,19 +211,14 @@ def main():
         coin_timer -= 1
 
 
-        if asteroid_timer <= 0 and rocket.sprite.alive:
-            asteroid_y = random.randint(200,400)
-            asteroid_x = 670
-            asteroid.add(Asteroid(asteroid_x, asteroid_y, asteroid_image))
-            asteroid_timer = random.randint(180, 250)
-        asteroid_timer -= 1
-
-
         coin_collision = pygame.sprite.spritecollide(rocket.sprites()[0], coin, False)
         if coin_collision:
             coin.remove(coin_collision[0])
             Coin_score += 1
 
+
+        if Coin_score != score:
+            changable_varible += 1
 
 
         collision_portal = pygame.sprite.spritecollide(rocket.sprites()[0], portal, False)
@@ -264,7 +238,7 @@ def main():
         if portal_timer <= 0 and rocket.sprite.alive:
             x_top, x_bottom = 550, 550
             y_top = random.randint(-600, -480)
-            y_bottom = y_top + random.randint(90, 130) + bottom_portal_image.get_height()
+            y_bottom = y_top + random.randint(100, 130) + bottom_portal_image.get_height()
             portal.add(Portal(x_top, y_top, top_portal_image, 'top'))
             portal.add(Portal(x_bottom, y_bottom, bottom_portal_image, 'bottom'))
             portal_timer = random.randint(180, 250)

@@ -218,7 +218,8 @@ def main():
 
 
         if Coin_score != score:
-            changable_varible += 1
+            for Coin_score in score:
+                changable_varible += 1
 
 
         collision_portal = pygame.sprite.spritecollide(rocket.sprites()[0], portal, False)
